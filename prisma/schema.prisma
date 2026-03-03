@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER        
+  INSTRUCTOR  
+  ADMIN       
+}
+
+model Usuario {
+  id            Int                 @id @default(autoincrement())
+  nome          String
+  username      String              @unique
+  senhaHash     String              @map("senha_hash") 
+  email         String?
+  ativo         Boolean             @default(true)
+  role          Role                @default(USER)
+  criadoEm      DateTime            @default(now()) @map("criado_em")
+  
+  tentativas    TentativaProva[]
+  certificados  Certificado[]
+
+  @@map("usuarios") 
+}
+
+model Fabricante {
+  id            Int      @id @default(autoincrement())
+  nome          String
+  site          String?
+  areaAtuacao   String?  @map("area_atuacao")
+  provas        Prova[]
+
+  @@map("fabricantes")
+}
+
+model Prova {
+  id                  Int       @id @default(autoincrement())
+  nome                String
+  categoria           String?
+  tempoLimiteMinutos  Int       @map("tempo_limite_minutos")
+  qtdPerguntasSorteio Int       @default(10) @map("qtd_perguntas_sorteio")
+  notaCorte           Decimal   @map("nota_corte") @db.Decimal(5, 2)
+  validadeMeses       Int?      @default(12) @map("validade_meses") 
+
+  fabricanteId        Int?      @map("fabricante_id")
+  fabricante          Fabricante? @relation(fields: [fabricanteId], references: [id])
+
+  perguntas           Pergunta[]
+  tentativas          TentativaProva[]
+
+  @@map("provas")
+}
+
+model Pergunta {
+  id               Int      @id @default(autoincrement())
+  enunciado        String   @db.Text
+  imagemUrl        String?  @map("imagem_url")
+  nivelDificuldade String?  @map("nivel_dificuldade") 
+  
+  provaId          Int      @map("prova_id")
+  prova            Prova    @relation(fields: [provaId], references: [id])
+
+  respostas        Resposta[]
+  tentativas       TentativaResposta[]
+
+  @@map("perguntas")
+}
+
+model Resposta {
+  id               Int      @id @default(autoincrement())
+  textoAlternativa String   @map("texto_alternativa") @db.Text
+  ehCorreta        Boolean  @map("eh_correta") 
+  
+  perguntaId       Int      @map("pergunta_id")
+  pergunta         Pergunta @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
+
+  respostasDadas   TentativaResposta[]
+
+  @@map("respostas")
+}
+
+model TentativaProva {
+  id          Int       @id @default(autoincrement())
+  dataInicio  DateTime  @default(now()) @map("data_inicio")
+  dataFim     DateTime? @map("data_fim")
+  notaFinal   Decimal?  @map("nota_final") @db.Decimal(5, 2)
+  aprovado    Boolean?
+  
+  usuarioId   Int       @map("usuario_id")
+  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
+  
+  provaId     Int       @map("prova_id")
+  prova       Prova     @relation(fields: [provaId], references: [id])
+
+  respostas   TentativaResposta[]
+  certificado Certificado?
+
+  @@map("tentativas_prova")
+}
+
+model TentativaResposta {
+  id                  Int             @id @default(autoincrement())
+  
+  tentativaId         Int             @map("tentativa_id")
+  tentativa           TentativaProva  @relation(fields: [tentativaId], references: [id])
+
+  perguntaId          Int             @map("pergunta_id")
+  pergunta            Pergunta        @relation(fields: [perguntaId], references: [id])
+
+  respostaEscolhidaId Int?            @map("resposta_escolhida_id")
+  resposta            Resposta?       @relation(fields: [respostaEscolhidaId], references: [id])
+
+  @@map("tentativas_respostas")
+}
+
+model Certificado {
+  id                Int             @id @default(autoincrement())
+  codigoAutenticacao String         @unique @default(uuid()) @map("codigo_autenticacao")
+  dataEmissao       DateTime        @default(now()) @map("data_emissao")
+  
+  dataValidade      DateTime?       @map("data_validade") 
+  
+  caminhoPdf        String?         @map("caminho_pdf")
+
+  usuarioId         Int             @map("usuario_id")
+  usuario           Usuario         @relation(fields: [usuarioId], references: [id])
+
+  tentativaId       Int             @unique @map("tentativa_id")
+  tentativa         TentativaProva  @relation(fields: [tentativaId], references: [id])
+
+  @@map("certificados")
+}
