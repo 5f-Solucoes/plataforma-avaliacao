@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect, notFound } from "next/navigation";
-import { Paper, Text, Title, Container, ThemeIcon, Stack, Box, Group } from "@mantine/core"; // Remova Button e IconArrowLeft daqui
+import { Paper, Text, Title, Container, ThemeIcon, Stack, Box, Group } from "@mantine/core"; 
 import { IconCertificate } from "@tabler/icons-react";
 import { CertificateControls } from "@/components/Certificado/CertificateControls"; 
 

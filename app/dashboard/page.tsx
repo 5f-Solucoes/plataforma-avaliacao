@@ -16,7 +16,7 @@ async function getData(userId: number) {
         usuarioId: userId,
         dataValidade: { gt: new Date() } 
       },
-      select: {
+      include: {
         tentativa: {
           select: { provaId: true }
         }

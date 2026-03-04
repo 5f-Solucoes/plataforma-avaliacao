@@ -3,23 +3,19 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@prisma/client'
 import * as dotenv from 'dotenv'
 
-// Carrega as variáveis de ambiente do .env
 dotenv.config()
 
 const connectionString = `${process.env.DATABASE_URL}`
 
-// 1. Configura o Pool e o Adapter (Igual fizemos no lib/prisma.ts)
 const pool = new Pool({ connectionString })
 const adapter = new PrismaPg(pool)
 
-// 2. Inicializa o Prisma com o Adapter
+
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
   console.log('🌱 Começando o seed...')
 
-  // Limpar banco (opcional)
-  // Tenta deletar na ordem certa para não quebrar FKs
   try {
      await prisma.tentativaResposta.deleteMany()
      await prisma.tentativaProva.deleteMany()
@@ -32,7 +28,6 @@ async function main() {
      console.log('⚠️ Aviso: Tabelas já estavam vazias ou erro ao limpar.')
   }
 
-  // 1. Criar Usuário Admin
   const usuario = await prisma.usuario.create({
     data: {
       nome: 'Administrador',
@@ -42,7 +37,6 @@ async function main() {
     }
   })
 
-  // 2. Criar Fabricante
   const fabricante = await prisma.fabricante.create({
     data: {
       nome: 'AWS',
@@ -51,7 +45,6 @@ async function main() {
     }
   })
 
-  // 3. Criar Prova
   await prisma.prova.create({
     data: {
       nome: 'AWS Cloud Practitioner',

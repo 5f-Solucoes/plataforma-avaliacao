@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { loginAction, checkMfaStatusAction } from "./action";
 import { TextInput, PasswordInput, Button, Paper, Title, Container, Checkbox, Group, Alert, Loader, Text } from "@mantine/core";
-import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
+import { IconAlertCircle, IconCheck, IconArrowLeft } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -90,7 +91,26 @@ export default function LoginPage() {
   };
 
   return (
-    <Container size={420} my={40}>
+    <div>
+      <Group justify="space-between">
+        <Button 
+        variant="transparent" 
+        color="gray" 
+        styles={{
+          root: {
+            '&:hover': {
+              backgroundColor: 'transparent !important',
+            },
+          },
+        }}
+        leftSection={<IconArrowLeft size={16}/>} 
+        component={Link as any} 
+        href="/"
+      >
+        Voltar
+      </Button>
+      </Group>
+      <Container size={420} my={40}>
       <Title ta="center">Login</Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         Utilize suas credenciais de rede
@@ -135,12 +155,12 @@ export default function LoginPage() {
           <Group justify="space-between" mt="lg">
             <Checkbox label="Relembre-me" name="remember" />
           </Group>
-
           <Button fullWidth mt="xl" type="submit" loading={loading}>
             Entrar
           </Button>
         </form>
       </Paper>
-    </Container>
+      </Container>
+    </div>
   );
 }

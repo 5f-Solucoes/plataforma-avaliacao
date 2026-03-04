@@ -10,7 +10,10 @@ import {
   IconPencil, 
   IconSettings, 
   IconUsers,
-  IconChevronDown
+  IconChevronDown,
+  IconBuildingFactory,
+  IconTags,
+  IconBook
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -107,6 +110,7 @@ export function MainLayout({ children, user }: MainLayoutProps) {
               leftSection={<IconCertificate size="1rem" />}
               active={pathname === "/perfil"}
             />
+            <NavLink component={Link} href="#" label="Estudos" leftSection={<IconBook size="1rem" />} />
 
             {isInstructor && (
               <>
@@ -121,6 +125,8 @@ export function MainLayout({ children, user }: MainLayoutProps) {
                     <NavLink component={Link} href="/admin/provas" label="Cadastrar Provas" active={pathname === "/admin/provas"} />
                     <NavLink component={Link} href="/admin/questoes" label="Banco de Questões" />
                 </NavLink>
+                <NavLink component={Link} href="/admin/fabricantes" label="Fabricantes" leftSection={<IconBuildingFactory size="1rem" />} />
+                <NavLink component={Link} href="/admin/categorias" label="Categorias" leftSection={<IconTags size="1rem" />} />
               </>
             )}
 

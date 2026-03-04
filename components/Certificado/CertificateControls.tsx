@@ -57,8 +57,7 @@ export function CertificateControls({ nomeUsuario, nomeProva, dataEmissao }: Cer
       <Button 
         variant="subtle" 
         leftSection={<IconArrowLeft size={16}/>} 
-        component={Link} 
-        href="/perfil"
+        onClick={() => window.close()} 
       >
         Voltar
       </Button>
