@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { 
   Title, Paper, Button, Group, Text, Modal, Stack, TextInput, 
-  ActionIcon, Radio, Accordion, Badge, Alert, ScrollArea 
+  ActionIcon, Radio, Accordion, Badge, Alert, ScrollArea, FileInput, Image 
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPlus, IconTrash, IconArrowLeft, IconCheck } from "@tabler/icons-react";
+import { IconPlus, IconTrash, IconArrowLeft, IconCheck, IconUpload } from "@tabler/icons-react";
 import { createQuestaoAction, deleteQuestaoAction } from "@/app/admin/provas/[id]/questoes/actions";
 import { notifications } from "@mantine/notifications";
 import Link from "next/link";
@@ -20,6 +20,7 @@ interface Resposta {
 interface Pergunta {
   id: number;
   enunciado: string;
+  imagemUrl?: string | null;
   respostas: Resposta[];
 }
 
@@ -34,6 +35,7 @@ export function QuestoesManager({ provaId, provaNome, questoes }: Props) {
   const [loading, setLoading] = useState(false);
 
   const [enunciado, setEnunciado] = useState("");
+  const [imagem, setImagem] = useState<File | null>(null);
   const [alternativas, setAlternativas] = useState([{ texto: "", correta: false }, { texto: "", correta: false }]);
 
   const addAlternativa = () => {
@@ -59,13 +61,25 @@ export function QuestoesManager({ provaId, provaNome, questoes }: Props) {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const res = await createQuestaoAction(provaId, enunciado, alternativas);
+    
+    const formData = new FormData();
+    formData.append("enunciado", enunciado);
+    formData.append("respostas", JSON.stringify(alternativas));
+    
+    if (imagem) {
+      formData.append("imagem", imagem);
+    }
+
+    const res = await createQuestaoAction(provaId, formData);
+    
     setLoading(false);
 
     if (res.success) {
       notifications.show({ title: 'Sucesso', message: res.message, color: 'green' });
       close();
+      // Reseta o form após sucesso
       setEnunciado("");
+      setImagem(null);
       setAlternativas([{ texto: "", correta: false }, { texto: "", correta: false }]);
     } else {
       notifications.show({ title: 'Erro', message: res.message, color: 'red' });
@@ -102,11 +116,26 @@ export function QuestoesManager({ provaId, provaNome, questoes }: Props) {
                     <Accordion.Item key={q.id} value={q.id.toString()}>
                         <Accordion.Control>
                             <Group justify="space-between" mr="md">
-                                <Text fw={500}>#{index + 1} - {q.enunciado}</Text>
-                                <Badge variant="light" color="gray">{q.respostas.length} alt.</Badge>
+                                <Text fw={500} lineClamp={1}>#{index + 1} - {q.enunciado}</Text>
+                                <Group gap="xs">
+                                  {q.imagemUrl && <Badge variant="dot" color="blue">Com Imagem</Badge>}
+                                  <Badge variant="light" color="gray">{q.respostas.length} alt.</Badge>
+                                </Group>
                             </Group>
                         </Accordion.Control>
                         <Accordion.Panel>
+                            {/* Exibe a imagem salva, caso exista */}
+                            {q.imagemUrl && (
+                                <div style={{ marginBottom: 20, textAlign: 'center' }}>
+                                    <Image 
+                                        src={q.imagemUrl} 
+                                        alt="Imagem da questão" 
+                                        radius="md"
+                                        style={{ maxWidth: '100%', maxHeight: 200, objectFit: 'contain', display: 'inline-block' }}
+                                    />
+                                </div>
+                            )}
+
                             <Stack gap="xs">
                                 {q.respostas.map((r) => (
                                     <Group key={r.id}>
@@ -127,15 +156,23 @@ export function QuestoesManager({ provaId, provaNome, questoes }: Props) {
         </Paper>
       )}
 
-      {/* MODAL DE CADASTRO */}
-      <Modal opened={opened} onClose={close} title="Nova Questão" size="lg">
+      <Modal opened={opened} onClose={close} title="Nova Questão" size="lg" centered>
         <Stack>
             <TextInput 
                 label="Enunciado da Pergunta" 
-                placeholder="Ex: Qual é a capital do Brasil?" 
+                placeholder="Ex: Qual a finalidade principal do serviço X?" 
                 value={enunciado}
                 onChange={(e) => setEnunciado(e.target.value)}
                 required
+            />
+
+            <FileInput
+                label="Imagem da Questão (Opcional)"
+                placeholder="Clique para anexar uma imagem"
+                accept="image/png,image/jpeg,image/webp,image/jpg"
+                value={imagem}
+                onChange={setImagem}
+                clearable
             />
 
             <Text fw={500} size="sm" mt="md">Alternativas (Marque a correta)</Text>
