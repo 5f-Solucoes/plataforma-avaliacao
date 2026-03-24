@@ -1,9 +1,8 @@
+import { prisma } from "@/lib/prisma";
 import { MainLayout } from "@/components/MainLayout";
 import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { iniciarOuRetomarProva } from "@/app/prova/[id]/actions"; 
-import { ExamRunner } from "@/components/Prova/ExamRunner"; 
-import { prisma } from "@/lib/prisma";
+import { ProvaStartWrapper } from "@/components/Prova/ProvaStartWrapper";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -22,21 +21,28 @@ export default async function ProvaPage({ params }: PageProps) {
 
   if (!prova) redirect("/dashboard");
 
-  const tentativaAberta = await iniciarOuRetomarProva(provaId);
+  const tentativaAberta = await prisma.tentativaProva.findFirst({
+     where: { usuarioId: user.id, provaId: prova.id, dataFim: null },
+     include: { respostas: { include: { pergunta: { include: { respostas: true } } } } }
+  });
 
-
-  const tentativaSanitizada = {
-    ...tentativaAberta,
-    prova: prova, 
-    notaFinal: tentativaAberta.notaFinal ? Number(tentativaAberta.notaFinal) : null,
-  };
+  const provaSanitizada = { ...prova, notaCorte: Number(prova.notaCorte) };
+  
+  let tentativaSanitizada = null;
+  if (tentativaAberta) {
+     tentativaSanitizada = {
+        ...tentativaAberta,
+        prova: provaSanitizada,
+        notaFinal: tentativaAberta.notaFinal ? Number(tentativaAberta.notaFinal) : null
+     }
+  }
 
   return (
     // @ts-ignore
     <MainLayout user={user}>
-      <ExamRunner 
-        tentativa={tentativaSanitizada} 
-        tempoLimiteMinutos={prova.tempoLimiteMinutos} 
+      <ProvaStartWrapper 
+        prova={provaSanitizada} 
+        tentativaAberta={tentativaSanitizada} 
       />
     </MainLayout>
   );
