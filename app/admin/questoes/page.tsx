@@ -7,7 +7,7 @@ import { QuestoesBank } from "@/components/admin/QuestoesBank";
 async function getQuestoes() {
   const questoes = await prisma.pergunta.findMany({
     include: {
-      prova: {
+      provas : { 
         select: {
             id: true,
             nome: true,
@@ -24,6 +24,18 @@ async function getQuestoes() {
   return questoes;
 }
 
+async function getProvasDisponiveis() {
+  return await prisma.prova.findMany({
+    select: {
+      id: true,
+      nome: true,
+    },
+    orderBy: {
+      nome: 'asc'
+    }
+  });
+}
+
 export default async function BancoQuestoesPage() {
   const user = await getCurrentUser();
 
@@ -32,11 +44,15 @@ export default async function BancoQuestoesPage() {
   }
 
   const questoes = await getQuestoes();
+  const provasDisponiveis = await getProvasDisponiveis();
 
   return (
     // @ts-ignore
     <MainLayout user={user}>
-      <QuestoesBank questoes={questoes} />
+      <QuestoesBank 
+        questoes={questoes} 
+        provasDisponiveis={provasDisponiveis} 
+      />
     </MainLayout>
   );
 }

@@ -5,26 +5,39 @@ import { Title } from "@mantine/core";
 import { redirect } from "next/navigation";
 import { ProvasManager } from "@/components/admin/ProvasManager";
 
-// Esta página carrega a LISTA, por isso usa findMany e NÃO recebe params
 async function getData() {
-  const [rawProvas, fabricantes] = await Promise.all([
+  const [rawProvas, fabricantes, rawUsuarios] = await Promise.all([
     prisma.prova.findMany({
-      include: { fabricante: true },
+      include: { 
+        fabricante: true,
+        usuariosPermitidos: { select: { id: true } },
+        materiais: true 
+      },
       orderBy: { id: 'desc' }
     }),
     prisma.fabricante.findMany({
+        orderBy: { nome: 'asc' }
+    }),
+    prisma.usuario.findMany({
+        select: { id: true, nome: true, email: true },
         orderBy: { nome: 'asc' }
     })
   ]);
 
   const provas = rawProvas.map(p => ({
     ...p,
-    notaCorte: p.notaCorte.toNumber(),
+    notaCorte: Number(p.notaCorte),
     validadeMeses: p.validadeMeses ?? 0,
     fabricanteId: p.fabricanteId ?? 0,
   }));
 
-  return { provas, fabricantes };
+  const usuarios = rawUsuarios.map(u => ({
+    id: u.id,
+    nome: u.nome,
+    email: u.email || "Sem e-mail"
+  }));
+
+  return { provas, fabricantes, usuarios };
 }
 
 export default async function AdminProvasPage() {
@@ -34,13 +47,18 @@ export default async function AdminProvasPage() {
     redirect("/dashboard");
   }
 
-  const { provas, fabricantes } = await getData();
+  const { provas, fabricantes, usuarios } = await getData();
+  const cleanUser = JSON.parse(JSON.stringify(user));
 
   return (
     // @ts-ignore
-    <MainLayout user={user}>
+    <MainLayout user={cleanUser}>
       <Title order={2} mb="xl">Gerenciar Provas</Title>
-      <ProvasManager provas={provas} fabricantes={fabricantes} />
+      <ProvasManager 
+        provas={provas} 
+        fabricantes={fabricantes} 
+        usuarios={usuarios} 
+      />
     </MainLayout>
   );
 }

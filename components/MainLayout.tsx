@@ -55,20 +55,20 @@ export function MainLayout({ children, user }: MainLayoutProps) {
 
           <Menu shadow="md" width={200} position="bottom-end">
             <Menu.Target>
-              <UnstyledButton>
-                <Group gap={7}>
+              <UnstyledButton p="xs" style={{ borderRadius: '8px' }}>
+                <Group gap={10}>
                   <Avatar radius="xl" color="blue" size="md">
-                    {user?.nome?.charAt(0).toUpperCase()}
+                    {user?.nome?.charAt(0).toUpperCase() || "U"}
                   </Avatar>
                   <div style={{ flex: 1 }}>
-                    <Text size="sm" fw={500} lh={1} mr={3}>
+                    <Text size="sm" fw={500} lh={1}>
                       {user?.nome || "Usuário"}
                     </Text>
-                    <Text size="xs" c="dimmed">
-                      {user?.role}
+                    <Text size="xs" c="dimmed" mt={2} tt="capitalize">
+                      {user?.role ? user.role.toLowerCase() : "Sem cargo"}
                     </Text>
                   </div>
-                  <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                  <IconChevronDown style={{ width: rem(14), height: rem(14) }} stroke={1.5} />
                 </Group>
               </UnstyledButton>
             </Menu.Target>
@@ -83,6 +83,7 @@ export function MainLayout({ children, user }: MainLayoutProps) {
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
+          
         </Group>
       </AppShell.Header>
 
@@ -110,8 +111,9 @@ export function MainLayout({ children, user }: MainLayoutProps) {
               leftSection={<IconCertificate size="1rem" />}
               active={pathname === "/perfil"}
             />
-            <NavLink component={Link} href="#" label="Estudos" leftSection={<IconBook size="1rem" />} />
-
+            <NavLink component={Link} href="/estudos" label="Estudos" leftSection={<IconBook size="1rem" />} />
+            <NavLink component={Link} href="/configuracoes" label="Configurações" leftSection={<IconSettings size="1rem" />} />
+            
             {isInstructor && (
               <>
                 <Divider my="md" />
@@ -120,13 +122,13 @@ export function MainLayout({ children, user }: MainLayoutProps) {
                 <NavLink
                   label="Gerenciar Provas"
                   leftSection={<IconPencil size="1rem" />}
-                  defaultOpened={pathname.startsWith("/admin/provas")}
+                  defaultOpened={pathname.startsWith("/admin/provas") || pathname.startsWith("/admin/questoes")}
                 >
                     <NavLink component={Link} href="/admin/provas" label="Cadastrar Provas" active={pathname === "/admin/provas"} />
-                    <NavLink component={Link} href="/admin/questoes" label="Banco de Questões" />
+                    <NavLink component={Link} href="/admin/questoes" label="Banco de Questões" active={pathname === "/admin/questoes"} />
                 </NavLink>
-                <NavLink component={Link} href="/admin/fabricantes" label="Fabricantes" leftSection={<IconBuildingFactory size="1rem" />} />
-                <NavLink component={Link} href="/admin/categorias" label="Categorias" leftSection={<IconTags size="1rem" />} />
+                <NavLink component={Link} href="/admin/fabricantes" label="Fabricantes" leftSection={<IconBuildingFactory size="1rem" />} active={pathname === "/admin/fabricantes"} />
+                <NavLink component={Link} href="/admin/categorias" label="Categorias" leftSection={<IconTags size="1rem" />} active={pathname === "/admin/categorias"} />
               </>
             )}
 
@@ -135,15 +137,14 @@ export function MainLayout({ children, user }: MainLayoutProps) {
                 <Divider my="md" />
                 <Text size="xs" fw={500} c="dimmed" mb="xs" tt="uppercase">Administração</Text>
                 
-                <NavLink component={Link} href="/admin/usuarios" label="Usuários" leftSection={<IconUsers size="1rem" />} />
-                <NavLink component={Link} href="/configuracoes" label="Configurações" leftSection={<IconSettings size="1rem" />} />
+                <NavLink component={Link} href="/admin/usuarios" label="Usuários" leftSection={<IconUsers size="1rem" />} active={pathname === "/admin/usuarios"} />
               </>
             )}
 
         </ScrollArea>
       </AppShell.Navbar>
 
-<AppShell.Main bg="body">{children}</AppShell.Main>    
+      <AppShell.Main bg="body">{children}</AppShell.Main>    
     </AppShell>
   );
 }
