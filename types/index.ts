@@ -3,6 +3,7 @@
 export interface Resposta {
   id: number;
   texto: string;
+  ehCorreta?: boolean;
 }
 
 export interface Pergunta {
@@ -13,6 +14,6 @@ export interface Pergunta {
 }
 
 export interface TentativaState {
-  respostasSelecionadas: Record<number, number>; 
+  respostasSelecionadas: Record<number, number[]>;
   perguntaAtual: number;
 }

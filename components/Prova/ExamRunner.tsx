@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { 
-  Paper, Title, Text, Radio, Button, Stack, Group, Container, 
-  Progress, ThemeIcon, Center, Box, Image
+  Paper, Title, Text, Radio, Checkbox, Button, Stack, Group, Container,
+  Progress, ThemeIcon, Center, Box, Image, Badge
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { finalizarProva } from "@/app/prova/[id]/actions";
@@ -23,15 +23,15 @@ export function ExamRunner({ tentativa, tempoLimiteMinutos }: any) {
   };
 
   const [timeLeft, setTimeLeft] = useState(calcularTempoRestante());
-  const [respostas, setRespostas] = useState<Record<number, number>>({});
+  const [respostas, setRespostas] = useState<Record<number, number[]>>({});
   const [loading, setLoading] = useState(false);
   const [resultado, setResultado] = useState<{ aprovado: boolean, nota: number, notaCorte: number } | null>(null);
 
   useEffect(() => {
-    const initialRespostas: Record<number, number> = {};
+    const initialRespostas: Record<number, number[]> = {};
     tentativa.respostas.forEach((tr: any) => {
-      if (tr.respostaEscolhidaId) {
-        initialRespostas[tr.pergunta.id] = tr.respostaEscolhidaId;
+      if (tr.respostasEscolhidas && tr.respostasEscolhidas.length > 0) {
+        initialRespostas[tr.pergunta.id] = tr.respostasEscolhidas.map((r: any) => r.id);
       }
     });
     setRespostas(initialRespostas);
@@ -60,15 +60,28 @@ export function ExamRunner({ tentativa, tempoLimiteMinutos }: any) {
   };
 
   const totalPerguntas = tentativa.respostas.length;
-  const totalRespondidas = Object.keys(respostas).length;
+  const totalRespondidas = Object.values(respostas).filter(arr => arr.length > 0).length;
   const porcentagem = (totalRespondidas / totalPerguntas) * 100;
   const isTimeCritical = timeLeft < 60; 
 
-  const handleSelect = (perguntaId: number, respostaId: string) => {
+  const handleSelectSingle = (perguntaId: number, respostaId: string) => {
     setRespostas(prev => ({
         ...prev,
-        [perguntaId]: parseInt(respostaId)
+        [perguntaId]: [parseInt(respostaId)]
     }));
+  };
+
+  const handleToggleMultiple = (perguntaId: number, respostaId: number) => {
+    setRespostas(prev => {
+      const current = prev[perguntaId] || [];
+      const exists = current.includes(respostaId);
+      return {
+        ...prev,
+        [perguntaId]: exists
+          ? current.filter(id => id !== respostaId)
+          : [...current, respostaId]
+      };
+    });
   };
 
   const handleFinalizar = async (autoSubmit = false) => {
@@ -191,53 +204,90 @@ export function ExamRunner({ tentativa, tempoLimiteMinutos }: any) {
       </Paper>
 
       <Stack gap="xl">
-        {tentativa.respostas.map((tr: any, index: number) => (
+        {tentativa.respostas.map((tr: any, index: number) => {
+            const isMulti = tr.pergunta.respostas.filter((r: any) => r.ehCorreta).length > 1;
+            const selectedIds = respostas[tr.pergunta.id] || [];
+
+            return (
             <Paper key={tr.id} p="lg" shadow="xs" radius="md" withBorder>
                 <Group mb="md" align="flex-start">
-                    <ThemeIcon size={28} radius="xl" color={respostas[tr.pergunta.id] ? "blue" : "gray"}>
+                    <ThemeIcon size={28} radius="xl" color={selectedIds.length > 0 ? "blue" : "gray"}>
                         <Text fw={700} size="sm">{index + 1}</Text>
                     </ThemeIcon>
                     <Text fw={600} size="lg" style={{ flex: 1 }}>
                         {tr.pergunta.enunciado}
                     </Text>
+                    {isMulti && (
+                        <Badge color="orange" variant="light" size="sm">
+                            Múltipla Escolha
+                        </Badge>
+                    )}
                 </Group>
 
                 {tr.pergunta.imagemUrl && (
                     <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-                        <Image 
-                            src={tr.pergunta.imagemUrl} 
-                            alt={`Imagem da questão ${index + 1}`} 
+                        <Image
+                            src={tr.pergunta.imagemUrl}
+                            alt={`Imagem da questão ${index + 1}`}
                             radius="md"
                             style={{ maxWidth: '100%', maxHeight: '400px', objectFit: 'contain', display: 'inline-block' }}
                         />
                     </div>
                 )}
 
-                <Radio.Group 
-                    value={respostas[tr.pergunta.id]?.toString()} 
-                    onChange={(val) => handleSelect(tr.pergunta.id, val)}
-                >
+                {isMulti ? (
                     <Stack gap="sm">
+                        <Text size="sm" c="dimmed">Selecione todas as alternativas corretas</Text>
                         {tr.pergunta.respostas.map((r: any) => (
-                            <Paper 
-                                key={r.id} 
-                                withBorder 
-                                p="sm" 
-                                radius="md" 
-                                bg={respostas[tr.pergunta.id] === r.id ? "blue.0" : "transparent"}
-                                style={{ borderColor: respostas[tr.pergunta.id] === r.id ? "var(--mantine-color-blue-5)" : undefined }}
+                            <Paper
+                                key={r.id}
+                                withBorder
+                                p="sm"
+                                radius="md"
+                                bg={selectedIds.includes(r.id) ? "blue.0" : "transparent"}
+                                style={{
+                                    borderColor: selectedIds.includes(r.id) ? "var(--mantine-color-blue-5)" : undefined,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => handleToggleMultiple(tr.pergunta.id, r.id)}
                             >
-                                <Radio 
-                                    value={r.id.toString()} 
+                                <Checkbox
+                                    checked={selectedIds.includes(r.id)}
+                                    onChange={() => handleToggleMultiple(tr.pergunta.id, r.id)}
                                     label={<Text size="md">{r.textoAlternativa}</Text>}
                                     style={{ cursor: 'pointer' }}
                                 />
                             </Paper>
                         ))}
                     </Stack>
-                </Radio.Group>
+                ) : (
+                    <Radio.Group
+                        value={selectedIds[0]?.toString()}
+                        onChange={(val) => handleSelectSingle(tr.pergunta.id, val)}
+                    >
+                        <Stack gap="sm">
+                            {tr.pergunta.respostas.map((r: any) => (
+                                <Paper
+                                    key={r.id}
+                                    withBorder
+                                    p="sm"
+                                    radius="md"
+                                    bg={selectedIds.includes(r.id) ? "blue.0" : "transparent"}
+                                    style={{ borderColor: selectedIds.includes(r.id) ? "var(--mantine-color-blue-5)" : undefined }}
+                                >
+                                    <Radio
+                                        value={r.id.toString()}
+                                        label={<Text size="md">{r.textoAlternativa}</Text>}
+                                        style={{ cursor: 'pointer' }}
+                                    />
+                                </Paper>
+                            ))}
+                        </Stack>
+                    </Radio.Group>
+                )}
             </Paper>
-        ))}
+            );
+        })}
       </Stack>
 
       <Box mt="xl" pt="xl" pb="xl" style={{ borderTop: '1px solid var(--mantine-color-default-border)' }}>
