@@ -67,12 +67,12 @@ describe('Motor de Provas - Server Actions', () => {
     it('deve guardar a resposta escolhida imediatamente', async () => {
       (prisma.tentativaResposta.update as any).mockResolvedValue({ id: 1 });
 
-      const result = await salvarRespostaParcial(55, 12); 
+      const result = await salvarRespostaParcial(55, [12]);
 
       expect(result).toBe(true);
       expect(prisma.tentativaResposta.update).toHaveBeenCalledWith({
         where: { id: 55 },
-        data: { respostaEscolhidaId: 12 }
+        data: { respostasEscolhidas: { set: [{ id: 12 }] } }
       });
     });
   });
@@ -89,7 +89,7 @@ describe('Motor de Provas - Server Actions', () => {
         ]
       });
 
-      const result = await finalizarProva(10, { 1: 12, 2: 21 }); 
+      const result = await finalizarProva(10, { 1: [12], 2: [21] });
 
       expect(result.success).toBe(true);
       expect(result.nota).toBe(5.0);
@@ -116,7 +116,7 @@ describe('Motor de Provas - Server Actions', () => {
         ]
       });
 
-      const result = await finalizarProva(10, { 1: 11, 2: 21 });
+      const result = await finalizarProva(10, { 1: [11], 2: [21] });
 
       expect(result.success).toBe(true);
       expect(result.nota).toBe(10.0);

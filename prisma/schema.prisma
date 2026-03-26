@@ -80,7 +80,7 @@ model Resposta {
   perguntaId       Int      @map("pergunta_id")
   pergunta         Pergunta @relation(fields: [perguntaId], references: [id], onDelete: Cascade)
 
-  respostasDadas   TentativaResposta[]
+  tentativasEscolhidas TentativaResposta[]
 
   @@map("respostas")
 }
@@ -113,8 +113,7 @@ model TentativaResposta {
   perguntaId          Int             @map("pergunta_id")
   pergunta            Pergunta        @relation(fields: [perguntaId], references: [id])
 
-  respostaEscolhidaId Int?            @map("resposta_escolhida_id")
-  resposta            Resposta?       @relation(fields: [respostaEscolhidaId], references: [id])
+  respostasEscolhidas Resposta[]
 
   @@map("tentativas_respostas")
 }

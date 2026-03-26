@@ -25,7 +25,8 @@ export async function iniciarOuRetomarProva(provaId: number) {
     include: {
       respostas: {
         include: {
-          pergunta: { include: { respostas: true } }
+          pergunta: { include: { respostas: true } },
+          respostasEscolhidas: true
         }
       }
     }
@@ -64,15 +65,15 @@ export async function iniciarOuRetomarProva(provaId: number) {
       provaId: prova.id,
       respostas: {
         create: perguntasSorteio.map((p) => ({
-          perguntaId: p.id,
-          respostaEscolhidaId: null
+          perguntaId: p.id
         }))
       }
     },
     include: {
       respostas: {
         include: {
-          pergunta: { include: { respostas: true } }
+          pergunta: { include: { respostas: true } },
+          respostasEscolhidas: true
         }
       }
     }
@@ -85,21 +86,25 @@ export async function iniciarOuRetomarProva(provaId: number) {
   return novaTentativa;
 }
 
-export async function salvarRespostaParcial(tentativaRespostaId: number, respostaId: number) {
+export async function salvarRespostaParcial(tentativaRespostaId: number, respostaIds: number[]) {
   await prisma.tentativaResposta.update({
     where: { id: tentativaRespostaId },
-    data: { respostaEscolhidaId: respostaId }
+    data: {
+      respostasEscolhidas: {
+        set: respostaIds.map(id => ({ id }))
+      }
+    }
   });
   return true;
 }
 
-export async function finalizarProva(provaId: number, respostas: Record<number, number>) {
+export async function finalizarProva(provaId: number, respostas: Record<number, number[]>) {
   const user = await getCurrentUser();
   if (!user) return { success: false, message: "Não autenticado" };
 
   const tentativa = await prisma.tentativaProva.findFirst({
     where: { usuarioId: user.id, provaId, dataFim: null },
-    include: { respostas: { include: { pergunta: { include: { respostas: true } } } } }
+    include: { respostas: { include: { pergunta: { include: { respostas: true } }, respostasEscolhidas: true } } }
   });
 
   if (!tentativa) return { success: false, message: "Nenhuma prova em andamento encontrada." };
@@ -111,16 +116,25 @@ export async function finalizarProva(provaId: number, respostas: Record<number, 
   const total = tentativa.respostas.length;
 
   for (const tr of tentativa.respostas) {
-    const respostaEscolhidaId = respostas[tr.pergunta.id];
-    
-    if (respostaEscolhidaId) {
+    const respostasIds = respostas[tr.pergunta.id] || [];
+
+    if (respostasIds.length > 0) {
       await prisma.tentativaResposta.update({
         where: { id: tr.id },
-        data: { respostaEscolhidaId }
+        data: {
+          respostasEscolhidas: {
+            set: respostasIds.map(id => ({ id }))
+          }
+        }
       });
 
-      const alternativa = tr.pergunta.respostas.find(r => r.id === respostaEscolhidaId);
-      if (alternativa && alternativa.ehCorreta) acertos++;
+      const corretas = new Set(tr.pergunta.respostas.filter((r: any) => r.ehCorreta).map((r: any) => r.id));
+      const escolhidas = new Set(respostasIds);
+
+      const acertou = corretas.size === escolhidas.size &&
+        [...corretas].every(id => escolhidas.has(id));
+
+      if (acertou) acertos++;
     }
   }
 
