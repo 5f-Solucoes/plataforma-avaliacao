@@ -23,7 +23,7 @@ export default async function ProvaPage({ params }: PageProps) {
 
   const tentativaAberta = await prisma.tentativaProva.findFirst({
      where: { usuarioId: user.id, provaId: prova.id, dataFim: null },
-     include: { respostas: { include: { pergunta: { include: { respostas: true } } } } }
+     include: { respostas: { include: { pergunta: { include: { respostas: true } }, respostasEscolhidas: true } } }
   });
 
   const provaSanitizada = { ...prova, notaCorte: Number(prova.notaCorte) };
