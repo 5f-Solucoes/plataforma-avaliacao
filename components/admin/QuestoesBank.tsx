@@ -4,7 +4,7 @@ import { useState } from "react";
 import { 
   Paper, TextInput, Title, Badge, Group, Text, Accordion, ThemeIcon, 
   ScrollArea, Container, Select, MultiSelect, Button, Modal, Stack, 
-  ActionIcon, Radio, FileInput, Image, Alert
+  ActionIcon, Checkbox, FileInput, Image, Alert
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { 
@@ -101,8 +101,9 @@ export function QuestoesBank({ questoes, provasDisponiveis }: Props) {
     setAlternativas(novas);
   };
 
-  const setCorreta = (index: number) => {
-    const novas = alternativas.map((a, i) => ({ ...a, correta: i === index }));
+  const toggleCorreta = (index: number) => {
+    const novas = [...alternativas];
+    novas[index] = { ...novas[index], correta: !novas[index].correta };
     setAlternativas(novas);
   };
 
@@ -197,6 +198,7 @@ export function QuestoesBank({ questoes, provasDisponiveis }: Props) {
                             </div>
                             <Group gap="xs">
                                 {q.imagemUrl && <Badge variant="dot" color="blue">Img</Badge>}
+                                {q.respostas.filter(r => r.ehCorreta).length > 1 && <Badge variant="light" color="orange">Múltipla</Badge>}
                                 {q.provas.length === 0 ? (
                                     <Badge color="red" variant="light">Não vinculada</Badge>
                                 ) : (
@@ -323,17 +325,15 @@ export function QuestoesBank({ questoes, provasDisponiveis }: Props) {
                 clearable
             />
 
-            <Text fw={500} size="sm" mt="md">Alternativas (Marque a correta)</Text>
-            
+            <Text fw={500} size="sm" mt="md">Alternativas (Marque a(s) correta(s))</Text>
+
             <ScrollArea.Autosize mah={300} offsetScrollbars>
                 <Stack gap="sm">
                     {alternativas.map((alt, i) => (
                         <Group key={i} align="center">
-                            <Radio 
-                                checked={alt.correta} 
-                                onChange={() => setCorreta(i)}
-                                name="correta"
-                                value={i.toString()}
+                            <Checkbox
+                                checked={alt.correta}
+                                onChange={() => toggleCorreta(i)}
                             />
                             <TextInput 
                                 style={{ flex: 1 }}
