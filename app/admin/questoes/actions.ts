@@ -33,8 +33,9 @@ export async function createGlobalQuestaoAction(formData: FormData) {
       return { success: false, message: "A questão precisa de pelo menos 2 alternativas." };
     }
 
-    if (!respostas.some(r => r.correta)) {
-      return { success: false, message: "Selecione qual é a alternativa correta." };
+    const quantidadeCorretas = respostas.filter(r => r.correta).length;
+    if (quantidadeCorretas === 0) {
+      return { success: false, message: "Selecione pelo menos uma alternativa correta." };
     }
 
     let imagemUrl = null;
@@ -82,6 +83,8 @@ export async function createGlobalQuestaoAction(formData: FormData) {
 
 export async function updateGlobalQuestaoAction(formData: FormData) {
   try {
+    await checkPermission(); 
+
     const id = parseInt(formData.get("id") as string);
     const enunciado = formData.get("enunciado") as string;
     const respostasStr = formData.get("respostas") as string;
@@ -94,6 +97,10 @@ export async function updateGlobalQuestaoAction(formData: FormData) {
 
     const respostas = JSON.parse(respostasStr) as { texto: string; correta: boolean }[];
     const provasIds = provasIdsStr ? JSON.parse(provasIdsStr) as number[] : [];
+
+    if (respostas.filter(r => r.correta).length === 0) {
+      return { success: false, message: "Selecione pelo menos uma alternativa correta." };
+    }
 
     const questaoAtual = await prisma.pergunta.findUnique({ where: { id } });
     let imagemUrl = questaoAtual?.imagemUrl || null;
@@ -117,7 +124,7 @@ export async function updateGlobalQuestaoAction(formData: FormData) {
         respostas: {
           create: respostas.map(r => ({
             textoAlternativa: r.texto,
-            ehCorreta: r.correta
+            ehCorreta: r.correta 
           }))
         },
         provas: {

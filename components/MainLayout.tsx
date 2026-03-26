@@ -124,7 +124,7 @@ export function MainLayout({ children, user }: MainLayoutProps) {
                   leftSection={<IconPencil size="1rem" />}
                   defaultOpened={pathname.startsWith("/admin/provas") || pathname.startsWith("/admin/questoes")}
                 >
-                    <NavLink component={Link} href="/admin/provas" label="Cadastrar Provas" active={pathname === "/admin/provas"} />
+                    <NavLink component={Link} href="/admin/provas" label="Gerenciar Provas" active={pathname === "/admin/provas"} />
                     <NavLink component={Link} href="/admin/questoes" label="Banco de Questões" active={pathname === "/admin/questoes"} />
                 </NavLink>
                 <NavLink component={Link} href="/admin/fabricantes" label="Fabricantes" leftSection={<IconBuildingFactory size="1rem" />} active={pathname === "/admin/fabricantes"} />

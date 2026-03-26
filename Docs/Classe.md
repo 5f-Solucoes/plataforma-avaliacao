@@ -1,6 +1,11 @@
 
 
 ```mermaid
+---
+config:
+  look: neo
+  layout: elk
+---
 classDiagram
     class Usuario {
         +Int id
