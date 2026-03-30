@@ -75,7 +75,7 @@ export default function ValidarCertificadoPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--mantine-color-body)" }}>
       <Container size="sm" py="xl">
         <Group mb="xl">
           <Button
