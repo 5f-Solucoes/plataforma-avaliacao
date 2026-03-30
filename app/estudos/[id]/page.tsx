@@ -8,6 +8,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// Página de detalhes do estudo para uma prova específica
 export default async function EstudoDetalhePage({ params }: PageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

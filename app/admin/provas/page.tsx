@@ -5,6 +5,7 @@ import { Title } from "@mantine/core";
 import { redirect } from "next/navigation";
 import { ProvasManager } from "@/components/admin/ProvasManager";
 
+// Função para buscar todas as provas, fabricantes e usuários, garantindo que os dados sejam formatados corretamente para uso no frontend
 async function getData() {
   const [rawProvas, fabricantes, rawUsuarios] = await Promise.all([
     prisma.prova.findMany({
@@ -40,6 +41,7 @@ async function getData() {
   return { provas, fabricantes, usuarios };
 }
 
+// Página de gerenciamento de provas, acessível apenas para usuários com permissão ADMIN ou INSTRUCTOR
 export default async function AdminProvasPage() {
   const user = await getCurrentUser();
 

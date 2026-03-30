@@ -24,6 +24,7 @@ interface Props {
   currentUserId: number;
 }
 
+// Componente para gerenciar usuários, exibindo uma tabela com informações e ações para cada usuário, incluindo edição e exclusão/inativação, com feedback visual para o usuário sobre o resultado da operação
 export function UsersManager({ users, currentUserId }: Props) {
   const [loadingId, setLoadingId] = useState<number | null>(null);
   const router = useRouter();

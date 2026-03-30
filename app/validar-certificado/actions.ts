@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+// Ação para validar um certificado com base no código de autenticação (UUID), verificando sua existência, validade e retornando informações relevantes
 export async function validarCertificadoAction(codigo: string) {
   const codigoTrimmed = codigo.trim();
 

@@ -7,6 +7,7 @@ import { ExamRunner } from "./ExamRunner";
 import { iniciarOuRetomarProva } from "@/app/prova/[id]/actions";
 import { notifications } from "@mantine/notifications";
 
+// Componente wrapper para iniciar ou retomar uma prova, exibindo as instruções iniciais e controlando o estado da tentativa
 export function ProvaStartWrapper({ prova, tentativaAberta }: any) {
    const [tentativa, setTentativa] = useState(tentativaAberta);
    const [loading, setLoading] = useState(false);

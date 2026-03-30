@@ -20,6 +20,7 @@ interface Props {
   fabricantes: Fabricante[];
 }
 
+// Componente para gerenciar fabricantes, permitindo renomear e remover fabricantes associados às provas, com feedback visual para o usuário
 export function FabricantesManager({ fabricantes }: Props) {
   const [opened, { open, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(false);

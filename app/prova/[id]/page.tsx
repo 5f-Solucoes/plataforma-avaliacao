@@ -8,6 +8,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// Página da prova, onde o usuário pode iniciar ou retomar uma tentativa, e acessar as perguntas
 export default async function ProvaPage({ params }: PageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

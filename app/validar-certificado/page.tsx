@@ -24,6 +24,7 @@ interface CertificadoResult {
   valido: boolean;
 }
 
+// Página para validar um certificado usando o código de autenticação, exibindo informações do certificado e sua validade
 export default function ValidarCertificadoPage() {
   const [codigo, setCodigo] = useState("");
   const [loading, setLoading] = useState(false);

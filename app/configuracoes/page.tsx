@@ -5,6 +5,7 @@ import { Title, Container } from "@mantine/core";
 import { redirect } from "next/navigation";
 import { SettingsTabs } from "@/components/Settings/SettingsTabs";
 
+// Página de configurações do usuário
 export default async function ConfiguracoesPage() {
   const sessionUser = await getCurrentUser();
 

@@ -10,6 +10,7 @@ interface RespostaInput {
   correta: boolean;
 }
 
+// Ação para criar uma nova questão, incluindo o upload de imagem e validação dos dados fornecidos
 export async function createQuestaoAction(provaId: number, formData: FormData) {
   const enunciado = formData.get("enunciado") as string;
   const respostasStr = formData.get("respostas") as string;
@@ -58,8 +59,10 @@ export async function createQuestaoAction(provaId: number, formData: FormData) {
     await prisma.pergunta.create({
       data: {
         enunciado,
-        provaId,
         imagemUrl,
+        provas: {
+          connect: { id: provaId }
+        },
         respostas: {
           create: respostas.map(r => ({
             textoAlternativa: r.texto,
@@ -78,6 +81,7 @@ export async function createQuestaoAction(provaId: number, formData: FormData) {
   }
 }
 
+// Ação para deletar uma questão, removendo também as respostas associadas
 export async function deleteQuestaoAction(perguntaId: number, provaId: number) {
   try {
     await prisma.resposta.deleteMany({ where: { perguntaId } });

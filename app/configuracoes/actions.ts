@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { hash, compare } from "bcryptjs"; 
 
+// Ações relacionadas às configurações do usuário, incluindo atualização de perfil e alteração de senha, garantindo que apenas usuários autenticados possam realizar essas ações
 export async function updateProfileAction(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { success: false, message: "Não autorizado." };
@@ -25,6 +26,7 @@ export async function updateProfileAction(formData: FormData) {
   }
 }
 
+// Ação para alterar a senha do usuário, validando a senha atual e garantindo que a nova senha seja confirmada corretamente, além de proteger a ação para usuários autenticados
 export async function changePasswordAction(formData: FormData) {
   const user = await getCurrentUser();
   if (!user) return { success: false, message: "Não autorizado." };

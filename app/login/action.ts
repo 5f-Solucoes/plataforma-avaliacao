@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 
 const SECRET = new TextEncoder().encode(process.env.SESSION_SECRET || "fallback-secret");
 
+// Ação para processar o login do usuário, incluindo autenticação MFA via WatchGuard
 export async function loginAction(prevState: any, formData: FormData) {
   const loginIdentifier = formData.get("login_identifier") as string;
   const senha = formData.get("senha") as string;
@@ -66,6 +67,7 @@ export async function loginAction(prevState: any, formData: FormData) {
   };
 }
 
+// Ação para verificar o status da autenticação MFA e criar sessão se autorizada
 export async function checkMfaStatusAction(transactionId: string) {
   const status = await verificarStatusTransacao(transactionId);
 

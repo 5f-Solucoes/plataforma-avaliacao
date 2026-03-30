@@ -5,6 +5,7 @@ import { Title } from "@mantine/core";
 import { ProvasList } from "@/components/Dashboard/ProvasList"; 
 import { redirect } from "next/navigation";
 
+// Função para buscar dados necessários para a dashboard
 async function getData(userId: number) {
   const certificadosValidos = await prisma.certificado.findMany({
     where: { usuarioId: userId },
@@ -33,6 +34,7 @@ async function getData(userId: number) {
   };
 }
 
+// Página principal da dashboard
 export default async function DashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

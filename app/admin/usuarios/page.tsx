@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getUsersAction } from "@/app/admin/usuarios/actions";
 import { UsersManager } from "@/components/admin/UsersManager";
 
+// Página de gerenciamento de usuários, acessível apenas para usuários com permissão ADMIN, permitindo a visualização, criação, edição e exclusão de usuários do sistema
 export default async function AdminUsuariosPage() {
   const currentUser = await getCurrentUser();
 

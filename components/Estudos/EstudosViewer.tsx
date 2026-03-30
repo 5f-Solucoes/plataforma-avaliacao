@@ -33,6 +33,7 @@ interface Props {
   userRole: string; 
 }
 
+// Componente para exibir o material de estudo de uma prova específica, permitindo que instrutores/admins adicionem ou removam conteúdos
 export function EstudosViewer({ prova, userRole }: Props) {
   const [loading, setLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);

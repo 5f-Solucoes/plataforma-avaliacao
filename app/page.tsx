@@ -18,6 +18,7 @@ import {
 } from "@tabler/icons-react";
 import Link from "next/link";
 
+// Página inicial da aplicação, apresentando uma visão geral dos benefícios da plataforma e um call-to-action para acessar a conta
 export default function HomePage() {
   return (
     <div style={{

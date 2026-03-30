@@ -12,6 +12,7 @@ interface QuestionCardProps {
   multiplaEscolha?: boolean;
 }
 
+// Componente para exibir uma questão, suas alternativas e permitir que o usuário selecione a resposta correta (ou múltiplas respostas, se for o caso)
 export function QuestionCard({
   pergunta,
   respostasSelecionadas,
@@ -35,7 +36,6 @@ export function QuestionCard({
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
-      {/* Cabeçalho da Questão */}
       <Group justify="space-between" mb="xs">
         <Badge color="blue" variant="light">
           Questão {numeroQuestao} de {totalQuestoes}
@@ -52,12 +52,10 @@ export function QuestionCard({
         </Group>
       </Group>
 
-      {/* Enunciado */}
       <Text fw={500} size="lg" mb="md">
         {pergunta.enunciado}
       </Text>
 
-      {/* Imagem (Opcional) */}
       {pergunta.imagemUrl && (
         <Card.Section mb="md">
           <Image
@@ -69,7 +67,6 @@ export function QuestionCard({
         </Card.Section>
       )}
 
-      {/* Alternativas - Checkbox para múltipla escolha, Radio para escolha única */}
       {multiplaEscolha ? (
         <Stack mt="xs">
           <Text size="sm" c="dimmed" fw={500}>Selecione todas as alternativas corretas</Text>

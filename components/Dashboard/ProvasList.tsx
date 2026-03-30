@@ -19,6 +19,7 @@ interface Props {
   concluidasIds?: number[];
 }
 
+// Componente para listar as provas disponíveis e indicar quais já foram concluídas
 export function ProvasList({ provas, concluidasIds = [] }: Props) {
   return (
     <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }}>

@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { randomBytes } from "crypto";
 import { revalidatePath } from "next/cache";
 
+// Ações relacionadas à prova, como iniciar, salvar respostas parciais e finalizar a prova
 export async function iniciarOuRetomarProva(provaId: number) {
   const user = await getCurrentUser();
   if (!user) throw new Error("Não autenticado");
@@ -86,6 +87,7 @@ export async function iniciarOuRetomarProva(provaId: number) {
   return novaTentativa;
 }
 
+// Salva respostas parciais durante a prova, permitindo que o usuário retome posteriormente
 export async function salvarRespostaParcial(tentativaRespostaId: number, respostaIds: number[]) {
   await prisma.tentativaResposta.update({
     where: { id: tentativaRespostaId },
@@ -98,6 +100,7 @@ export async function salvarRespostaParcial(tentativaRespostaId: number, respost
   return true;
 }
 
+// Finaliza a prova, calculando a nota final, determinando aprovação e gerando certificado se necessário
 export async function finalizarProva(provaId: number, respostas: Record<number, number[]>) {
   const user = await getCurrentUser();
   if (!user) return { success: false, message: "Não autenticado" };

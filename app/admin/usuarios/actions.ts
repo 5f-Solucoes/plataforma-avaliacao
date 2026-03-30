@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth";
 import { hash } from "bcryptjs";
 
+// Função para verificar se o usuário atual tem permissão de ADMIN, lançando um erro caso contrário
 export async function getUsersAction() {
   const users = await prisma.usuario.findMany({
     orderBy: { nome: 'asc' }
@@ -12,6 +13,7 @@ export async function getUsersAction() {
   return users;
 }
 
+// Ação para excluir um usuário, verificando se o usuário possui registros associados e inativando-o em vez de excluir, caso existam registros
 export async function deleteUserAction(userId: number) {
   const currentUser = await getCurrentUser();
 
@@ -51,6 +53,7 @@ export async function deleteUserAction(userId: number) {
   
 }
 
+// Ação para criar um novo usuário, validando os dados fornecidos e garantindo que o nome de usuário e e-mail sejam únicos
 export async function createUserAction(formData: FormData) {
   const currentUser = await getCurrentUser();
   if (currentUser?.role !== "ADMIN") return { success: false, message: "Sem permissão." };
@@ -59,7 +62,7 @@ export async function createUserAction(formData: FormData) {
   const username = formData.get("username") as string;
   const email = formData.get("email") as string;
   const role = formData.get("role") as "USER" | "INSTRUCTOR" | "ADMIN";
-  const status = formData.get("status") as string; // "ATIVO" ou "INATIVO"
+  const status = formData.get("status") as string; 
 
   if (!nome || !username || !email) {
     return { success: false, message: "Preencha todos os campos obrigatórios." };
@@ -92,6 +95,7 @@ export async function createUserAction(formData: FormData) {
   }
 }
 
+// Ação para atualizar os detalhes de um usuário existente, garantindo que apenas usuários com permissão ADMIN possam realizar a ação e que os dados sejam validados corretamente
 export async function updateUserAction(id: number, formData: FormData) {
   const currentUser = await getCurrentUser();
   if (currentUser?.role !== "ADMIN") return { success: false, message: "Sem permissão." };

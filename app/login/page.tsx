@@ -7,6 +7,7 @@ import { IconAlertCircle, IconCheck, IconArrowLeft } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+// Página de login, incluindo lógica para autenticação MFA via WatchGuard
 export default function LoginPage() {
   const router = useRouter();
   

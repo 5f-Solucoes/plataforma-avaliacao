@@ -10,6 +10,7 @@ import { finalizarProva } from "@/app/prova/[id]/actions";
 import { IconClock, IconAlertTriangle, IconCheck, IconX, IconRefresh, IconTrophy } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 
+// Componente principal para execução da prova, onde o usuário responde as questões e tem o tempo controlado
 export function ExamRunner({ tentativa, tempoLimiteMinutos }: any) {
   const router = useRouter();
   

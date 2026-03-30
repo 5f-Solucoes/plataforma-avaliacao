@@ -30,6 +30,7 @@ interface Props {
   questoes: Pergunta[];
 }
 
+// Componente para gerenciar questões de uma prova específica, permitindo criar novas questões com enunciado, imagem e alternativas, além de excluir questões existentes, com feedback visual para o usuário
 export function QuestoesManager({ provaId, provaNome, questoes }: Props) {
   const [opened, { open, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(false);
@@ -78,7 +79,6 @@ export function QuestoesManager({ provaId, provaNome, questoes }: Props) {
     if (res.success) {
       notifications.show({ title: 'Sucesso', message: res.message, color: 'green' });
       close();
-      // Reseta o form após sucesso
       setEnunciado("");
       setImagem(null);
       setAlternativas([{ texto: "", correta: false }, { texto: "", correta: false }]);

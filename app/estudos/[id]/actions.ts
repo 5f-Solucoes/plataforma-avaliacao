@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 
+// Ações para criar e deletar materiais de estudo
 export async function createEstudoAction(provaId: number, formData: FormData) {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR")) {
@@ -51,6 +52,7 @@ export async function createEstudoAction(provaId: number, formData: FormData) {
   }
 }
 
+// Ação para deletar um material de estudo
 export async function deleteEstudoAction(materialId: number, provaId: number) {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR")) {

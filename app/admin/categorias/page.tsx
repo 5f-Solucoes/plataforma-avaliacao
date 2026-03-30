@@ -23,6 +23,7 @@ async function getCategoriasAgrupadas() {
   return categorias.filter(c => c.categoria && c.categoria.trim() !== "");
 }
 
+// Página de gerenciamento de categorias, acessível apenas para usuários com permissão ADMIN ou INSTRUCTOR
 export default async function CategoriasPage() {
   const user = await getCurrentUser();
 

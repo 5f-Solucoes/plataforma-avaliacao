@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+// Ação para criar uma nova prova, validando os dados fornecidos e garantindo que o nome e fabricante sejam obrigatórios
 export async function createProvaAction(formData: FormData) {
   const nome = formData.get("nome") as string;
   const categoria = formData.get("categoria") as string;
@@ -39,6 +40,7 @@ export async function createProvaAction(formData: FormData) {
   }
 }
 
+// Ação para atualizar os detalhes de uma prova existente, garantindo que os dados sejam validados antes de salvar
 export async function updateProvaAction(formData: FormData) {
   try {
     const id = parseInt(formData.get("id") as string);
@@ -62,6 +64,7 @@ export async function updateProvaAction(formData: FormData) {
   }
 }
 
+// Ação para deletar uma prova, garantindo que as questões e tentativas associadas sejam tratadas adequadamente
 export async function deleteProvaAction(id: number) {
   try {
     await prisma.prova.delete({ where: { id } });
@@ -134,6 +137,7 @@ export async function createMaterialAction(provaId: number, formData: FormData) 
   }
 }
 
+// Ação para deletar um material de estudo, removendo-o da prova associada
 export async function deleteMaterialAction(id: number) {
   try {
     await prisma.materialEstudo.delete({ where: { id } });

@@ -20,6 +20,7 @@ interface Props {
   categorias: CategoriaAgrupada[];
 }
 
+// Componente para gerenciar categorias, permitindo renomear e remover categorias associadas às provas, com feedback visual para o usuário
 export function CategoriasManager({ categorias }: Props) {
   const [opened, { open, close }] = useDisclosure(false);
   const [loading, setLoading] = useState(false);

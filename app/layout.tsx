@@ -8,6 +8,7 @@ export const metadata = {
   description: "Sistema de Certificação",
 };
 
+// Layout raiz da aplicação, configurando o tema e provendo o contexto para notificações
 export default function RootLayout({
   children,
 }: {
