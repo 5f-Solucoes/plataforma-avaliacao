@@ -38,6 +38,7 @@ interface Props {
   provasDisponiveis: { id: number; nome: string }[];
 }
 
+// Componente para gerenciar o banco global de questões, permitindo criar, editar, excluir e filtrar questões, com feedback visual para o usuário
 export function QuestoesBank({ questoes, provasDisponiveis }: Props) {
   const [search, setSearch] = useState("");
   const [provaFilter, setProvaFilter] = useState<string | null>(null);

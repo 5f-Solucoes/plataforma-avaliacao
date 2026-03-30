@@ -9,6 +9,7 @@ interface PageProps {
   params: Promise<{ codigo: string }>;
 }
 
+// Página de visualização de certificado, acessível apenas para o usuário proprietário do certificado ou para usuários com permissão ADMIN, exibindo os detalhes do certificado e permitindo a impressão do mesmo
 export default async function CertificadoViewPage({ params }: PageProps) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

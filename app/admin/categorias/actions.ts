@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth";
 
+// Função auxiliar para verificar permissões de usuário
 async function checkPermission() {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR")) {
@@ -11,6 +12,7 @@ async function checkPermission() {
   }
 }
 
+// Ações para renomear e deletar categorias, garantindo que apenas usuários autorizados possam realizar essas operações
 export async function renameCategoriaAction(oldName: string, newName: string) {
   try {
     await checkPermission();
@@ -32,6 +34,7 @@ export async function renameCategoriaAction(oldName: string, newName: string) {
   }
 }
 
+// Ação para deletar uma categoria, definindo o campo categoria como null para as provas associadas
 export async function deleteCategoriaAction(categoryName: string) {
   try {
     await checkPermission();

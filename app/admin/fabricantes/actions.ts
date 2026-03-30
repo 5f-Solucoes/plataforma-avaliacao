@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth";
 
+// Função auxiliar para verificar permissões de usuário
 async function checkPermission() {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR")) {
@@ -11,6 +12,7 @@ async function checkPermission() {
   }
 }
 
+// Ações para salvar (criar ou atualizar) e deletar fabricantes, garantindo que apenas usuários autorizados possam realizar essas operações
 export async function saveFabricanteAction(id: number | null, formData: FormData) {
   try {
     await checkPermission();
@@ -41,6 +43,7 @@ export async function saveFabricanteAction(id: number | null, formData: FormData
   }
 }
 
+// Ação para deletar um fabricante, verificando se existem provas vinculadas antes de permitir a exclusão
 export async function deleteFabricanteAction(id: number) {
   try {
     await checkPermission();

@@ -17,6 +17,7 @@ import {
 import { IconDownload, IconTrophy } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 
+// Página de perfil do usuário, mostrando informações pessoais e certificados conquistados
 export default async function PerfilPage() {
   const user = await getCurrentUser();
 
@@ -51,10 +52,8 @@ export default async function PerfilPage() {
     <MainLayout user={user}>
       <Title order={2} mb="lg">Meu Perfil</Title>
 
-      {/* Usamos Stack para empilhar o Topo e a Lista verticalmente */}
       <Stack gap="xl">
         
-        {/* SEÇÃO 1: Resumo do Usuário */}
         <Paper shadow="xs" p="xl" radius="md" withBorder>
             <Group>
                 <ThemeIcon size={60} radius={60} color="blue" variant="light">
@@ -70,7 +69,6 @@ export default async function PerfilPage() {
             </Group>
         </Paper>
 
-        {/* SEÇÃO 2: Lista de Certificados */}
         <div>
           <Title order={3} mb="md">Meus Certificados ({certificados.length})</Title>
           
@@ -116,9 +114,9 @@ export default async function PerfilPage() {
                         fullWidth 
                         mt="md" 
                         leftSection={<IconDownload size={16}/>}
-                        component="a" // Importante: usar 'a' ou Link
-                        href={`/certificado/${cert.codigoAutenticacao}`} // Rota que criamos
-                        target="_blank" // Abre em nova aba
+                        component="a" 
+                        href={`/certificado/${cert.codigoAutenticacao}`} 
+                        target="_blank" 
                     >
                         Visualizar / Imprimir
                     </Button>

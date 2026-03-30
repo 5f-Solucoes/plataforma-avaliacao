@@ -8,6 +8,7 @@ interface PageProps {
     params: Promise<{ id: string }>;
 }
 
+// Página de edição de usuário, acessível apenas para usuários com permissão ADMIN, permitindo a atualização dos detalhes do usuário selecionado
 export default async function EditUserPage({ params }: PageProps) {
   const user = await getCurrentUser();
   if (!user || user.role !== "ADMIN") redirect("/dashboard");

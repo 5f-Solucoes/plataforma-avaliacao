@@ -8,6 +8,7 @@ interface PageProps {
   params: Promise<{ id: string }>;
 }
 
+// Página de gerenciamento de questões para uma prova específica, acessível apenas para usuários com permissão ADMIN ou INSTRUCTOR
 export default async function AdminQuestoesPage({ params }: PageProps) {
   const user = await getCurrentUser();
 

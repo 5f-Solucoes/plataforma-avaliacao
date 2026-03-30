@@ -6,6 +6,7 @@ import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { getCurrentUser } from "@/lib/auth";
 
+// Função para verificar se o usuário atual tem permissão de ADMIN ou INSTRUCTOR, lançando um erro caso contrário
 async function checkPermission() {
   const user = await getCurrentUser();
   if (!user || (user.role !== "ADMIN" && user.role !== "INSTRUCTOR")) {
@@ -13,6 +14,7 @@ async function checkPermission() {
   }
 }
 
+// Ação para criar uma nova questão global, validando os dados fornecidos, processando a imagem (se houver) e vinculando a provas selecionadas
 export async function createGlobalQuestaoAction(formData: FormData) {
   try {
     await checkPermission();
@@ -81,6 +83,7 @@ export async function createGlobalQuestaoAction(formData: FormData) {
   }
 }
 
+// Ação para atualizar os detalhes de uma questão existente, garantindo que os dados sejam validados antes de salvar
 export async function updateGlobalQuestaoAction(formData: FormData) {
   try {
     await checkPermission(); 
@@ -142,6 +145,7 @@ export async function updateGlobalQuestaoAction(formData: FormData) {
   }
 }
 
+// Ação para excluir uma questão global, garantindo que as respostas associadas sejam removidas e que a questão seja desvinculada das provas
 export async function deleteGlobalQuestaoAction(id: number) {
   try {
     await checkPermission();

@@ -13,6 +13,7 @@ interface CertificateControlsProps {
   dataEmissao: Date;
 }
 
+// Componente para os controles do certificado (imprimir, baixar PDF, voltar)
 export function CertificateControls({ nomeUsuario, nomeProva, dataEmissao }: CertificateControlsProps) {
   const [loading, setLoading] = useState(false);
 

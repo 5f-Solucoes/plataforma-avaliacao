@@ -29,6 +29,7 @@ interface MainLayoutProps {
   } | null;
 }
 
+// Componente de layout principal que envolve todas as páginas, fornecendo uma estrutura consistente com header, navbar e área principal para o conteúdo
 export function MainLayout({ children, user }: MainLayoutProps) {
   const [opened, { toggle }] = useDisclosure();
   const pathname = usePathname();

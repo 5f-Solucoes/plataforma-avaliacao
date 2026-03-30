@@ -23,6 +23,7 @@ interface Props {
   initialData?: UserData; 
 }
 
+// Componente para criar ou editar um usuário, com campos para nome, username, email, perfil de acesso e status, e feedback visual para o usuário sobre o resultado da operação
 export function UserForm({ initialData }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);

@@ -6,6 +6,7 @@ import { Title, SimpleGrid, Card, Text, Button, Group, Badge } from "@mantine/co
 import { IconBook2, IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
 
+// Página principal do módulo de estudos, listando as provas disponíveis para estudo
 export default async function EstudosIndexPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");

@@ -39,6 +39,7 @@ interface Props {
   usuarios: UserSimples[]; 
 }
 
+// Componente para gerenciar provas, permitindo criar, editar, ativar/desativar e controlar acesso às provas, com feedback visual para o usuário
 export function ProvasManager({ provas, fabricantes, usuarios }: Props) {
   const [search, setSearch] = useState("");
   

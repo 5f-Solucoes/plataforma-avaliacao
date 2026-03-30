@@ -16,6 +16,7 @@ interface User {
   email: string;
 }
 
+// Componente de abas para configurações do usuário, incluindo edição de perfil e preferências de aparência
 export function SettingsTabs({ user }: { user: User }) {
   const { colorScheme, toggleColorScheme, setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });

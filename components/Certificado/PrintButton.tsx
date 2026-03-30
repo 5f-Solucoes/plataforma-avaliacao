@@ -3,6 +3,7 @@
 import { Button } from "@mantine/core";
 import { IconPrinter } from "@tabler/icons-react";
 
+// Componente de botão para imprimir ou salvar como PDF
 export function PrintButton() {
   return (
     <Button 
