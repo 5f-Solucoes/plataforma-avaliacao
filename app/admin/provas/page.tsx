@@ -5,6 +5,8 @@ import { Title } from "@mantine/core";
 import { redirect } from "next/navigation";
 import { ProvasManager } from "@/components/admin/ProvasManager";
 
+export const metadata = { title: "Gerenciar Provas" };
+
 // Função para buscar todas as provas, fabricantes e usuários, garantindo que os dados sejam formatados corretamente para uso no frontend
 async function getData() {
   const [rawProvas, fabricantes, rawUsuarios] = await Promise.all([

@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { redirect, notFound } from "next/navigation";
 import { UserForm } from "@/components/admin/UserForm";
 
+export const metadata = { title: "Editar Usuário" };
+
 interface PageProps {
     params: Promise<{ id: string }>;
 }

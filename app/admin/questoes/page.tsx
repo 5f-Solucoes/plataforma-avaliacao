@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { QuestoesBank } from "@/components/admin/QuestoesBank";
 
+export const metadata = { title: "Banco de Questões" };
+
 // Função para buscar todas as questões, incluindo as provas associadas e as respostas, garantindo que os dados sejam ordenados corretamente
 async function getQuestoes() {
   const questoes = await prisma.pergunta.findMany({

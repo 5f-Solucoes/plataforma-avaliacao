@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { FabricantesManager } from "@/components/admin/FabricantesManager";
 
+export const metadata = { title: "Gerenciar Fabricantes" };
+
 // Função para buscar todos os fabricantes, ordenados por nome
 async function getFabricantes() {
   return await prisma.fabricante.findMany({
