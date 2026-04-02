@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { CategoriasManager } from "@/components/admin/CategoriasManager";
 
+export const metadata = { title: "Gerenciar Categorias" };
+
 async function getCategoriasAgrupadas() {
   const categorias = await prisma.prova.groupBy({
     by: ['categoria'],

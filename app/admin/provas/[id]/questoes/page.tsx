@@ -4,6 +4,8 @@ import { MainLayout } from "@/components/MainLayout";
 import { redirect, notFound } from "next/navigation";
 import { QuestoesManager } from "@/components/admin/QuestoesManager";
 
+export const metadata = { title: "Questões da Prova" };
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }

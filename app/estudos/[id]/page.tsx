@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { EstudosViewer } from "@/components/Estudos/EstudosViewer";
 
+export const metadata = { title: "Material de Estudo" };
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }

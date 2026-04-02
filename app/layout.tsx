@@ -4,8 +4,14 @@ import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 
 export const metadata = {
-  title: "Plataforma Avaliação",
+  title: {
+    default: "Plataforma Avaliação",
+    template: "%s - Plataforma Avaliação",
+  },
   description: "Sistema de Certificação",
+  icons: {
+    icon: "/images/logop.png",
+  },
 };
 
 // Layout raiz da aplicação, configurando o tema e provendo o contexto para notificações

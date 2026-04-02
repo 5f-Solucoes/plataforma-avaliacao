@@ -1,9 +1,11 @@
 import { MainLayout } from "@/components/MainLayout";
 import { getCurrentUser } from "@/lib/auth";
-import { prisma } from "@/lib/prisma"; 
+import { prisma } from "@/lib/prisma";
 import { Title, Container } from "@mantine/core";
 import { redirect } from "next/navigation";
 import { SettingsTabs } from "@/components/Settings/SettingsTabs";
+
+export const metadata = { title: "Configurações" };
 
 // Página de configurações do usuário
 export default async function ConfiguracoesPage() {

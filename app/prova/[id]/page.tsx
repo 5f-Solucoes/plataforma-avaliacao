@@ -4,6 +4,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { ProvaStartWrapper } from "@/components/Prova/ProvaStartWrapper";
 
+export const metadata = { title: "Prova" };
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }

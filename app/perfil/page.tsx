@@ -1,19 +1,21 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { MainLayout } from "@/components/MainLayout";
-import { 
-  Card, 
-  SimpleGrid, 
-  Stack,      
-  Group, 
-  Text, 
-  Title, 
-  Paper, 
-  Button, 
-  Badge, 
-  ThemeIcon, 
-  Alert 
+import {
+  Card,
+  SimpleGrid,
+  Stack,
+  Group,
+  Text,
+  Title,
+  Paper,
+  Button,
+  Badge,
+  ThemeIcon,
+  Alert
 } from "@mantine/core";
+
+export const metadata = { title: "Perfil" };
 import { IconDownload, IconTrophy } from "@tabler/icons-react";
 import { redirect } from "next/navigation";
 

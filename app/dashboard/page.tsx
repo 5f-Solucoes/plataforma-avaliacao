@@ -2,8 +2,10 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 import { MainLayout } from "@/components/MainLayout";
 import { Title } from "@mantine/core";
-import { ProvasList } from "@/components/Dashboard/ProvasList"; 
+import { ProvasList } from "@/components/Dashboard/ProvasList";
 import { redirect } from "next/navigation";
+
+export const metadata = { title: "Dashboard" };
 
 // Função para buscar dados necessários para a dashboard
 async function getData(userId: number) {
